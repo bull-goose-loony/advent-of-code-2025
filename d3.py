@@ -1,3 +1,37 @@
+# Input: a string of numbers
+# Output: the maximum 12 digit number selected from string 
+def process_bank_2(bank: str) -> int: 
+    bank_length = len(bank)
+    print(f'processing bank: {bank}')
+    result_str = ''
+    start_idx = 0
+    end_idx = bank_length - 12
+
+    for i in range(12):
+        max_idx = select_max(bank, start_idx, end_idx)
+        result_str += bank[max_idx]
+        start_idx = max_idx + 1
+        end_idx += 1
+
+    result = int(result_str)
+    # print(f'Result: {result}')
+    return result
+
+# Take a bank str, start_idx, end_idx, return the index of the largest
+# number within that range
+def select_max(bank: str, start_idx: int, end_idx: int) -> int:
+    index = -1
+    max = 0
+    # print(f'selecting from range {bank[start_idx:end_idx + 1]}')
+    for i in range(start_idx, end_idx + 1):
+        if int(bank[i]) > max:
+            index = i
+            max = int(bank[i])
+    # print(f'Selected {max} at index {index}')
+    return index
+
+    
+
 def process_bank(bank: str):
     ##TODO find the maximum 
     ## gotcha, if the highest number is at the end, it can't be the first battery
@@ -43,27 +77,22 @@ def get_largest_digit_index(bank: str):
 def execute(banks):
     total_sum = 0
     for bank in banks:
-        largest_bat = process_bank(bank.strip())
+        largest_bat = process_bank_2(bank.strip())
         total_sum += largest_bat
     print(f"Result: {total_sum}")
 
 
 def test():
-    process_bank("1234")
-    process_bank("4321")
-    process_bank("987654321111111")
-    process_bank("811111111111119")
-    process_bank("234234234234278")
-    process_bank("818181911112111")
-    process_bank("3422625438535318655835453462742236454559673365563575346236243542284435538452836574856662875273434662")
+    # length = 12
+    process_bank_2("987654321111111")
+    process_bank_2("811111111111119")
+    process_bank_2("234234234234278")
 
 def main():
     with open("inputs/d3.txt", "r") as file:
         banks = file.readlines()
     execute(banks)
     # test()
-    # 16287 is too low
-    # 16924 didn't work either.
 
 if __name__ == "__main__":
     main()
