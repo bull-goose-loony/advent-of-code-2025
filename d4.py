@@ -3,44 +3,63 @@ def execute(grid: list[list[str]]):
     for r, row in enumerate(grid):
         for c, cell in enumerate(row):
             if cell == "@":
-                sub_grid = get_surrounding_cells(grid, r, c)
-                # check 8 surrounding cells.
                 if get_roll_count(grid, r, c) < 4:
                     roll_count += 1 
-
     return roll_count
 
-def get_surrounding_cells(grid: list[list[str]], r: int, c:int):
-    # TODO return a 3x3 grid of surrounding cells
-    # remember: current cell (r, c) should appear empty
-    return 0
-    
 def get_roll_count(grid: list[list[str]], r: int, c:int) -> int:
-    # loop from r-1 c-1 to r+1 c+1
-    return 0
+    row_len = len(grid)
+    col_height = len(grid[0])
 
+    # print(f"Iteration r = {r}, c = {c}")
+
+    roll_count = 0
+    for sr in range(r-1, r+2):
+        if sr < 0:
+            continue
+        for sc in range(c-1, c+2):
+            # print(f'sr = {sr}, sc = {sc}')
+            if sc < 0:
+                # print('0!')
+                continue
+            if sr > row_len - 1:
+                # print('1!')
+                continue
+            if sc > col_height - 1:
+                # print('2!')
+                continue
+            if (sr == r) and (sc == c):
+                # print('3!')
+                continue
+            # print(f"grid[sr][sc] = {grid[sr][sc]}")
+            if grid[sr][sc] == '@':
+                roll_count += 1
+
+    print(f"Roll count = {roll_count}")
+    return roll_count
 
 def test():
     print("hi")
-    test_content = """
-        ..@@.@@@@.
-        @@@.@.@.@@
-        @@@@@.@.@@
-        @.@@@@..@.
-        @@.@@@@.@@
-        .@@@@@@@.@
-        .@.@.@.@@@
-        @.@@@.@@@@
-        .@@@@@@@@.
-        @.@.@@@.@.
-    """
-    grid = lines_to_grid(test_content)
+    test_content = """..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@."""
+
+    grid: list[list[str]] = [list(line) for line in test_content.splitlines()]
+    print(grid)
+    sum = execute(grid)
+    print(sum)
 
 def lines_to_grid(lines):
     grid: list[list[str]] = []
-    rows = lines.readlines()
-    for row in rows:
-        grid.append(list(row.strip()))
+    for line in lines:
+        grid.append(list(line.strip()))
     return grid
 
 def main():
@@ -50,6 +69,7 @@ def main():
         for row in rows:
             grid.append(list(row.strip()))
     print(execute(grid))
+
 
 if __name__ == "__main__":
     main()
