@@ -1,11 +1,37 @@
-def execute(grid: list[list[str]]):
-    roll_count = 0
+def execute(grid: list[list[str]]) -> list[tuple[int, int]]:
+    to_remove: list[tuple[int, int]] = []
     for r, row in enumerate(grid):
         for c, cell in enumerate(row):
             if cell == "@":
-                if get_roll_count(grid, r, c) < 4:
-                    roll_count += 1 
-    return roll_count
+                if can_remove(grid, r, c):
+                    to_remove.append((r, c))
+    return to_remove
+
+
+def process_grid(grid: list[list[str]]):
+    changes: list[tuple[int, int]] = []
+    rolls_removed = 0
+
+    while True:
+        changes = execute(grid)
+        count_to_remove = len(changes) 
+
+        if count_to_remove == 0:
+            break
+        rolls_removed += count_to_remove
+        grid = remove_rolls(grid, changes)
+
+    return rolls_removed
+
+def remove_rolls(grid: list[list[str]], coordinates: list[tuple[int, int]]):
+    for x, y in coordinates:
+        grid[x][y] = '.'
+    return grid
+
+def can_remove(grid: list[list[str]], r: int, c:int):
+    if get_roll_count(grid, r, c) < 4:
+        return True
+    return False
 
 def get_roll_count(grid: list[list[str]], r: int, c:int) -> int:
     row_len = len(grid)
@@ -68,7 +94,7 @@ def main():
         rows = file.readlines()
         for row in rows:
             grid.append(list(row.strip()))
-    print(execute(grid))
+    print(process_grid(grid))
 
 
 if __name__ == "__main__":
